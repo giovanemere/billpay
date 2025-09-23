@@ -86,6 +86,29 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           projectPath: z.string().default('/home/giovanemere/periferia/billpay'),
         }),
       },
+      {
+        name: 'setup_backstage_integration',
+        description: 'Setup Backstage catalog, templates and TechDocs integration',
+        inputSchema: z.object({
+          projectPath: z.string().default('/home/giovanemere/periferia/billpay'),
+          githubOrg: z.string().default('giovanemere'),
+        }),
+      },
+      {
+        name: 'generate_software_templates',
+        description: 'Generate Backstage software templates for microservices and frontends',
+        inputSchema: z.object({
+          templateTypes: z.array(z.enum(['microservice', 'frontend', 'infrastructure'])).default(['microservice', 'frontend']),
+        }),
+      },
+      {
+        name: 'configure_techdocs',
+        description: 'Configure TechDocs integration with MkDocs and S3 publisher',
+        inputSchema: z.object({
+          s3Bucket: z.string().optional(),
+          region: z.string().default('us-east-1'),
+        }),
+      },
     ],
   };
 });
@@ -109,6 +132,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await generateTerraformModules(args);
       case 'setup_ci_cd_pipelines':
         return await setupCICDPipelines(args);
+      case 'setup_backstage_integration':
+        return await setupBackstageIntegration(args);
+      case 'generate_software_templates':
+        return await generateSoftwareTemplates(args);
+      case 'configure_techdocs':
+        return await configureTechDocs(args);
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
@@ -369,6 +398,106 @@ async function setupCICDPipelines(args: any) {
               `- AWS_SECRET_ACCESS_KEY\n` +
               `- AWS_REGION\n` +
               `- ECR_REGISTRY`,
+      },
+    ],
+  };
+}
+
+async function setupBackstageIntegration(args: any) {
+  const { projectPath, githubOrg } = args;
+  
+  const components = [
+    'Service Catalog - Auto-discovery de repositorios',
+    'Software Templates - Templates para microservicios y frontends',
+    'TechDocs - Documentación técnica integrada',
+    'GitHub Integration - Sync automático con repositorios'
+  ];
+
+  const structure = [
+    `${projectPath}/backstage/`,
+    `├── app-config.yaml`,
+    `├── catalog/`,
+    `│   ├── all.yaml`,
+    `│   ├── systems/`,
+    `│   ├── components/`,
+    `│   └── resources/`,
+    `├── scaffolder-templates/`,
+    `└── techdocs/`
+  ];
+
+  return {
+    content: [
+      {
+        type: 'text',
+        text: `🎭 Setting up Backstage integration for: ${projectPath}\n` +
+              `GitHub Organization: ${githubOrg}\n\n` +
+              `Components to configure:\n${components.map(c => `- ${c}`).join('\n')}\n\n` +
+              `Directory structure:\n${structure.join('\n')}\n\n` +
+              `Next steps:\n` +
+              `1. Generate catalog files\n` +
+              `2. Configure GitHub integration\n` +
+              `3. Setup software templates\n` +
+              `4. Configure TechDocs publisher`,
+      },
+    ],
+  };
+}
+
+async function generateSoftwareTemplates(args: any) {
+  const { templateTypes } = args;
+  
+  const templates = {
+    microservice: 'Java/Spring Boot microservice with Docker and K8s manifests',
+    frontend: 'Angular microfrontend with Module Federation',
+    infrastructure: 'OpenTofu infrastructure module'
+  };
+
+  const selectedTemplates = templateTypes.map(type => `- ${type}: ${templates[type]}`);
+
+  return {
+    content: [
+      {
+        type: 'text',
+        text: `🎭 Generating Backstage software templates\n\n` +
+              `Templates to create:\n${selectedTemplates.join('\n')}\n\n` +
+              `Each template will include:\n` +
+              `- Scaffolder template YAML\n` +
+              `- Cookiecutter template structure\n` +
+              `- GitHub Actions workflow\n` +
+              `- Documentation template\n` +
+              `- Catalog-info.yaml\n\n` +
+              `Templates will be stored in:\n` +
+              `- /templates/cookiecutter/{template-name}/\n` +
+              `- /backstage/scaffolder-templates/{template-name}.yaml`,
+      },
+    ],
+  };
+}
+
+async function configureTechDocs(args: any) {
+  const { s3Bucket, region } = args;
+  
+  const config = [
+    'MkDocs configuration for documentation',
+    'S3 publisher for static site hosting',
+    'GitHub integration for auto-sync',
+    'Custom theme and plugins'
+  ];
+
+  return {
+    content: [
+      {
+        type: 'text',
+        text: `📚 Configuring TechDocs integration\n` +
+              `Region: ${region}\n` +
+              `S3 Bucket: ${s3Bucket || 'billpay-techdocs-' + region}\n\n` +
+              `Configuration includes:\n${config.map(c => `- ${c}`).join('\n')}\n\n` +
+              `Files to create:\n` +
+              `- backstage/techdocs/mkdocs.yml\n` +
+              `- backstage/app-config.yaml (techdocs section)\n` +
+              `- docs/ structure for each service\n\n` +
+              `Documentation will be available at:\n` +
+              `https://backstage.billpay.com/docs/`,
       },
     ],
   };
