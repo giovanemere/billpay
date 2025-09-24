@@ -11,8 +11,9 @@ Implementar una **plataforma de pagos enterprise** con:
 
 ```
 billpay/ (REPOSITORIO CENTRAL)
-├── .github/                       # 🔄 GitHub Actions Centralizadas
-│   └── workflows/                 # Workflows compartidos
+├── .github/                       # 🔄 GitHub Actions Simples
+│   └── workflows/                 # Workflows de invocación
+│       └── deploy.yml            # Deploy completo (invoca ia-ops-iac)
 ├── repositories/                  # 📦 REPOSITORIOS CLONADOS (git submodules)
 │   ├── poc-billpay-back/          # Backend API (Java/Gradle) ✅
 │   ├── poc-billpay-front-a/       # Frontend Principal (Angular 17) ✅
@@ -99,18 +100,18 @@ billpay/ (REPOSITORIO CENTRAL)
 - Creación de herramientas MCP
 - Documentación completa
 
-### 🚧 **Fase 2A: Infraestructura Base** (3 días)
-- VPC + Networking
-- EKS Cluster + Node Groups
-- ECR Repositories
-- S3 + CloudFront
-
-### 🔄 **Fase 2B: IaC Automation Stack** (3 días)
+### 🔄 **Fase 2A: IaC Automation Stack** (3 días)
 - Template Engine (Cookiecutter + Jinja2)
 - Terragrunt DRY configuration
 - OpenTofu modules
 - Python dynamic scripts
-- Backstage integration
+- GitHub Actions integration
+
+### 🚧 **Fase 2B: Infraestructura Base** (3 días)
+- VPC + Networking (via automation)
+- EKS Cluster + Node Groups (via automation)
+- ECR Repositories (via automation)
+- S3 + CloudFront (via automation)
 
 ### ⏳ **Fases 3-8: Deploy y Aplicaciones** (10 días)
 - CI/CD pipelines
@@ -226,6 +227,8 @@ cd /home/giovanemere/ia-ops/ia-ops-backstage && ./scripts/start-development.sh
 
 ## 📚 DOCUMENTACIÓN
 
+- **[Workflows Centralizados](docs/WORKFLOWS.md)** - Arquitectura CI/CD centralizada
+- **[Stack de Automatización](docs/AUTOMATION_STACK.md)** - Flujo completo IaC + Backstage
 - **[Estructura Completa](docs/PROJECT_STRUCTURE.md)** - Estructura detallada del proyecto
 - **[Prerequisitos](docs/PREREQUISITES.md)** - Herramientas y configuraciones necesarias
 - **[Contexto IA](docs/CONTEXT_PROMPT.md)** - Contexto completo para IA generativa

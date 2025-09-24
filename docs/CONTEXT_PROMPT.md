@@ -10,16 +10,15 @@ Implementar una **plataforma de pagos enterprise** con:
 ## 📁 ESTRUCTURA COMPLETA DEL PROYECTO
 ```
 billpay/ (REPOSITORIO CENTRAL - git@github.com:giovanemere/billpay.git)
-├── .github/                       # 🔄 GitHub Actions Centralizadas
-│   ├── workflows/                 # Workflows compartidos
-│   └── templates/                 # Issue/PR templates
+├── .github/                       # 🔄 GitHub Actions Simples
+│   └── workflows/                 # Workflows de invocación (llaman a ia-ops-iac)
 ├── repositories/                  # 📦 REPOSITORIOS CLONADOS (git submodules)
 │   ├── poc-billpay-back/          # Backend API (Java/Gradle + Docker)
 │   ├── poc-billpay-front-a/       # Frontend Principal (Angular 17 + Module Federation)
 │   ├── poc-billpay-front-b/       # Frontend Secundario (Angular 17 + Module Federation)
 │   ├── poc-billpay-front-feature-flags/ # Gestión de Features (Angular 17)
 │   ├── templates_backstage/       # Templates IDP (Backstage)
-│   └── ia-ops-iac/               # Infrastructure as Code (OpenTofu)
+│   └── ia-ops-iac/               # Infrastructure as Code (OpenTofu + Workflows Centralizados)
 ├── infrastructure/                # 🛠️ HERRAMIENTAS IAC
 │   ├── terragrunt/                # Terragrunt DRY configs
 │   ├── opentofu/                  # OpenTofu modules
@@ -137,6 +136,24 @@ billpay/ (REPOSITORIO CENTRAL - git@github.com:giovanemere/billpay.git)
 3. **Migrar a OpenTofu** desde Terraform
 4. **Crear Python scripts** para lógica dinámica
 5. **Integrar Backstage** completamente
+
+## 🔄 WORKFLOWS CENTRALIZADOS
+
+### **Arquitectura de CI/CD**
+- **Centralización:** Todos los workflows en `ia-ops-iac/.github/workflows/`
+- **Reutilización:** Workflows reutilizables con `workflow_call`
+- **Invocación:** Cada repo tiene workflow simple que invoca el centralizado
+- **DRY:** No duplicar código, mantener en un solo lugar
+
+### **Workflows Principales**
+1. **infrastructure.yml** - Deploy/destroy infraestructura AWS
+2. **deploy-service.yml** - Deploy servicios individuales (backend/frontend)
+3. **deploy-complete.yml** - Deploy completo de toda la plataforma
+
+### **Flujo de Deploy**
+```
+Backstage Template → GitHub Workflow → ia-ops-iac Workflows → AWS Resources
+```
 
 ## 🚀 HERRAMIENTAS MCP DISPONIBLES
 

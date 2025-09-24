@@ -1,0 +1,25 @@
+name: 🚀 BillPay Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+        - dev
+        - staging
+        - prod
+
+jobs:
+  deploy:
+    name: 🚀 Deploy Complete BillPay
+    uses: giovanemere/ia-ops-iac/.github/workflows/deploy-complete.yml@main
+    with:
+      environment: ${{ github.event.inputs.environment }}
+      project_name: billpay
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
