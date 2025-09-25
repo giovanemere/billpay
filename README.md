@@ -220,6 +220,31 @@ gh secret set AWS_ROLE_ARN --body "arn:aws:iam::ACCOUNT_ID:role/BillPayGitHubAct
    - **🔐 Real AWS OIDC**: Seguro, sin credenciales hardcodeadas
    - **☁️ Real AWS Legacy**: Credenciales tradicionales
 
+### **🔧 Gestión Post-Deployment**
+Una vez desplegado, el repositorio es **independiente** del template. Gestión via:
+
+#### **1. GitOps (Automático) - Recomendado**
+```bash
+git clone https://github.com/giovanemere/tu-proyecto
+# Hacer cambios en archivos
+git push origin main  # ← Activa CI/CD automáticamente
+```
+
+#### **2. Backstage Management Actions**
+```
+Backstage → Create → "BillPay Management Actions"
+├── 🏗️ Update Infrastructure (modify AWS resources)
+├── 📈 Scale Resources (change instance sizes/counts)
+├── 🔧 Update Environment Variables  
+├── 🚀 Redeploy Applications (restart deployments)
+└── 📊 View Deployment Status
+```
+
+#### **3. GitHub Actions Manual**
+```
+Repositorio → Actions → "BillPay Management" → Run workflow
+```
+
 ### **🔐 Seguridad OIDC Implementada**
 - ✅ **Sin credenciales hardcodeadas** - Eliminadas completamente
 - ✅ **Rotación automática** - Credenciales temporales (1h TTL)
@@ -229,6 +254,7 @@ gh secret set AWS_ROLE_ARN --body "arn:aws:iam::ACCOUNT_ID:role/BillPayGitHubAct
 ### **📋 Templates Disponibles**
 - **BillPay Demo Simple**: Deployment rápido con opciones simulation/real
 - **BillPay Complete Stack**: Infraestructura completa multi-cloud
+- **BillPay Management Actions**: Gestión de deployments existentes ✨ **NUEVO**
 - **Catálogo Completo**: 4 repositorios + sistema integrado
 
 ### **💾 Estrategia de Backups Backstage**
@@ -271,7 +297,7 @@ billpay/ (REPOSITORIO CENTRAL)
 - ✅ **Multi-Cloud Ready**: AWS, GCP, Azure, OCI configurados
 
 #### **Frase de Contexto Rápido:**
-> "Proyecto BillPay - Plataforma de pagos enterprise con microservicios. Backstage Developer Portal operativo en `/home/giovanemere/ia-ops/ia-ops-backstage/`. OIDC security implementado. Sistema completo listo para producción."
+> "Proyecto BillPay - Plataforma de pagos enterprise con microservicios. Backstage Developer Portal operativo en `/home/giovanemere/ia-ops/ia-ops-backstage/`. OIDC security implementado. Sistema completo listo para producción con gestión post-deployment via GitOps y Backstage Management Actions."
 
 ### 1. Verificar Prerequisitos
 ```bash
@@ -305,7 +331,22 @@ cd /home/giovanemere/ia-ops/ia-ops-backstage && ./scripts/start-development.sh
 # 4. Deploy automático via Backstage → GitHub Actions → AWS
 ```
 
-### 6. Configurar Repositorio IaC Multi-Cloud
+### 6. Gestionar Deployments Existentes ✨ **NUEVO**
+```bash
+# Opción A: GitOps (Recomendado)
+git clone https://github.com/giovanemere/tu-proyecto
+# Hacer cambios y push activa CI/CD automáticamente
+git push origin main
+
+# Opción B: Backstage Management Actions
+# Backstage → Create → "BillPay Management Actions"
+# - Update Infrastructure, Scale Resources, Redeploy, etc.
+
+# Opción C: GitHub Actions Manual
+# Repo → Actions → "BillPay Management" → Run workflow
+```
+
+### 7. Configurar Repositorio IaC Multi-Cloud
 ```bash
 # El template de Backstage configurará automáticamente:
 # - OpenTofu modules en repositories/ia-ops-iac/clouds/{aws,gcp,azure,oci}/
@@ -316,6 +357,7 @@ cd /home/giovanemere/ia-ops/ia-ops-backstage && ./scripts/start-development.sh
 
 ## 📚 DOCUMENTACIÓN
 
+- **[Post-Deployment Management](docs/POST_DEPLOYMENT_MANAGEMENT.md)** - Gestión completa de repositorios desplegados ✨ **NUEVO**
 - **[Workflows Centralizados](docs/WORKFLOWS.md)** - Arquitectura CI/CD centralizada
 - **[Stack de Automatización](docs/AUTOMATION_STACK.md)** - Flujo completo IaC + Backstage
 - **[Estructura Completa](docs/PROJECT_STRUCTURE.md)** - Estructura detallada del proyecto
@@ -330,12 +372,15 @@ cd /home/giovanemere/ia-ops/ia-ops-backstage && ./scripts/start-development.sh
 - ✅ Pipeline completo automatizado (Developer Self-Service → IaC → Deploy)
 - ✅ Backstage funcionando como Developer Portal
 - ✅ Templates automatizados para nuevos servicios
+- ✅ **Sistema de gestión post-deployment implementado** ✨ **NUEVO**
+- ✅ **3 estrategias de actualización disponibles (GitOps, Backstage Actions, Manual)** ✨ **NUEVO**
 - ✅ Infraestructura AWS completamente automatizada
 - ✅ CI/CD con GitHub Actions
 - ✅ Documentación técnica integrada (TechDocs)
 - ✅ Seguridad OIDC implementada (100% compliance)
 - ✅ Testing automatizado (100% success rate)
 - ✅ Herramientas de mantenimiento operativas
+- ✅ **S3 buckets con permisos públicos configurados automáticamente** ✨ **NUEVO**
 
 ---
 
