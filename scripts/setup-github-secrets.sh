@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# GitHub Secrets Setup Helper
+echo "🔑 GitHub Secrets Setup"
+echo "======================="
+echo ""
+echo "1. Go to: https://github.com/giovanemere/ia-ops-iac/settings/secrets/actions"
+echo ""
+echo "2. Click 'New repository secret'"
+echo ""
+echo "3. Add these secrets:"
+echo ""
+echo "   Name: AWS_ACCESS_KEY_ID"
+echo "   Value: $(aws configure get aws_access_key_id)"
+echo ""
+echo "   Name: AWS_SECRET_ACCESS_KEY" 
+echo "   Value: $(aws configure get aws_secret_access_key)"
+echo ""
+echo "4. Run workflow: 🎯 Simple Demo Deploy"
+echo ""
+echo "✅ Done! The workflow will now work."
