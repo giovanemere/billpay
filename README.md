@@ -48,6 +48,80 @@ billpay/ (REPOSITORIO CENTRAL)
     └── start-deployment.sh       # Inicio de despliegue ✅
 ```
 
+## 🔄 FLUJO COMPLETO: TEMPLATE → GITHUB → IAC → DEPLOY
+
+### **📋 Contexto Completo del Ecosistema**
+
+```mermaid
+graph TB
+    subgraph "1. BACKSTAGE TEMPLATE"
+        TEMPLATE[📋 BillPay Complete Stack Template]
+        PARAMS[⚙️ User Parameters<br/>• project_name, cloud_provider<br/>• BillPay components selection<br/>• Infrastructure components]
+        SKELETON[📁 Skeleton Files<br/>• catalog-info.yaml<br/>• workflows, docs, scripts]
+    end
+    
+    subgraph "2. GITHUB REPOSITORY"
+        REPO[📦 New GitHub Repo<br/>giovanemere/project_name]
+        FILES[📄 Generated Files<br/>• IaC configs<br/>• CI/CD workflows<br/>• Documentation]
+        SECRETS[🔐 OIDC Secrets<br/>• AWS_ROLE_ARN<br/>• GITHUB_TOKEN]
+    end
+    
+    subgraph "3. IAC REPOSITORY (ia-ops-iac)"
+        WORKFLOW[🔄 deploy-billpay-complete.yml]
+        TERRAGRUNT[🏗️ Terragrunt Configs<br/>• Multi-environment<br/>• Multi-cloud]
+        OPENTOFU[🔧 OpenTofu Modules<br/>• VPC, EKS, ECR, S3<br/>• BillPay-specific]
+        PYTHON[🐍 Python Scripts<br/>• Dynamic configuration<br/>• Component orchestration]
+    end
+    
+    subgraph "4. BILLPAY DEPLOYMENT"
+        INFRA[☁️ Infrastructure<br/>• VPC, EKS, ECR, S3+CDN<br/>• IAM, Secrets, Monitoring]
+        BACKEND[🔧 Backend Services<br/>• API, Payment, User, Admin<br/>• Java/Spring Boot microservices]
+        FRONTEND[🎨 Frontend Apps<br/>• Payment, Admin, Feature Flags<br/>• Angular 17 microfrontends]
+    end
+    
+    TEMPLATE --> PARAMS
+    PARAMS --> SKELETON
+    SKELETON --> REPO
+    REPO --> FILES
+    FILES --> WORKFLOW
+    WORKFLOW --> TERRAGRUNT
+    TERRAGRUNT --> OPENTOFU
+    OPENTOFU --> PYTHON
+    PYTHON --> INFRA
+    INFRA --> BACKEND
+    INFRA --> FRONTEND
+```
+
+### **🎯 BillPay Complete Stack Template - Componentes Incluidos**
+
+#### **🚀 BillPay Application Components**
+- **🔧 Backend API** - Java 17 + Spring Boot + Gradle (32 archivos Java)
+- **💳 Payment Service** - Microservicio core de procesamiento de pagos
+- **👤 User Service** - Gestión de usuarios y autenticación
+- **⚙️ Admin Service** - Funciones administrativas (opcional)
+- **🎨 Frontend Payment** - Angular 17 + Module Federation (app principal)
+- **🎨 Frontend Admin** - Angular 17 + Module Federation (panel admin)
+- **🎛️ Feature Flags** - Angular 17 A/B testing system
+
+#### **🏗️ Infrastructure Components**
+- **🌐 VPC Network** - Red privada (10.0.0.0/16) multi-AZ
+- **☸️ Kubernetes** - EKS/GKE/AKS/OKE según cloud provider
+- **🐳 Container Registry** - ECR/GCR/ACR/OCIR para imágenes Docker
+- **💾 Object Storage + CDN** - S3+CloudFront/GCS+CDN para frontends
+- **⚖️ Load Balancer** - ALB/GLB/Azure LB para alta disponibilidad
+- **🔒 Secrets Manager** - Gestión segura de credenciales
+- **📊 Monitoring Stack** - CloudWatch + Prometheus + Grafana (opcional)
+
+### **⏱️ Tiempos de Despliegue**
+- **🎭 Simulation**: 5-8 minutos (sin costos cloud)
+- **☁️ Real Infrastructure**: 25-35 minutos (infraestructura + aplicaciones)
+- **🔧 Applications Only**: 10-15 minutos (si infraestructura existe)
+
+### **💰 Costos Estimados por Ambiente**
+- **Development**: $170-265/mes
+- **Staging**: $200-300/mes  
+- **Production**: $300-450/mes
+
 ## 🔐 ARQUITECTURA DE SEGURIDAD OIDC
 
 ### **Autenticación Segura Sin Credenciales**
@@ -357,34 +431,43 @@ git push origin main
 
 ## 📚 DOCUMENTACIÓN
 
-- **[Post-Deployment Management](docs/POST_DEPLOYMENT_MANAGEMENT.md)** - Gestión completa de repositorios desplegados ✨ **NUEVO**
+### **🔄 Contextos del Ecosistema Completo**
+- **[Template Context](docs/TEMPLATE_CONTEXT.md)** - Contexto para generación de templates Backstage ✨ **NUEVO**
+- **[GitHub Context](docs/GITHUB_CONTEXT.md)** - Estructura y configuración de repositorios ✨ **NUEVO**
+- **[IAC Context](docs/IAC_CONTEXT.md)** - Workflows y configuración de infraestructura ✨ **NUEVO**
+- **[Deployment Context](docs/DEPLOYMENT_CONTEXT.md)** - Fases y componentes de despliegue ✨ **NUEVO**
+
+### **📋 Documentación Técnica**
+- **[Post-Deployment Management](docs/POST_DEPLOYMENT_MANAGEMENT.md)** - Gestión completa de repositorios desplegados
 - **[Workflows Centralizados](docs/WORKFLOWS.md)** - Arquitectura CI/CD centralizada
 - **[Stack de Automatización](docs/AUTOMATION_STACK.md)** - Flujo completo IaC + Backstage
 - **[Estructura Completa](docs/PROJECT_STRUCTURE.md)** - Estructura detallada del proyecto
 - **[Prerequisitos](docs/PREREQUISITES.md)** - Herramientas y configuraciones necesarias
 - **[Contexto IA](docs/CONTEXT_PROMPT.md)** - Contexto completo para IA generativa
 - **[Plan de Despliegue](docs/deployment-plan.md)** - Plan detallado de implementación
-- **[🔧 Corrección Backstage-GitHub](docs/BACKSTAGE_GITHUB_INTEGRATION_FIX.md)** - Plan corrección integración
-- **[🤖 Tareas MCP](docs/MCP_DEPLOYMENT_TASKS.md)** - Tareas para MCP deployment
 
 ## 🎯 CRITERIOS DE ÉXITO
 
 - ✅ Pipeline completo automatizado (Developer Self-Service → IaC → Deploy)
 - ✅ Backstage funcionando como Developer Portal
 - ✅ Templates automatizados para nuevos servicios
-- ✅ **Sistema de gestión post-deployment implementado** ✨ **NUEVO**
-- ✅ **3 estrategias de actualización disponibles (GitOps, Backstage Actions, Manual)** ✨ **NUEVO**
+- ✅ **Template BillPay Complete Stack con arquitectura completa** ✨ **NUEVO**
+- ✅ **Componentes BillPay específicos (7 aplicaciones + 7 infraestructura)** ✨ **NUEVO**
+- ✅ **Contextos documentados para todo el ecosistema** ✨ **NUEVO**
+- ✅ **Sistema de gestión post-deployment implementado**
+- ✅ **3 estrategias de actualización disponibles (GitOps, Backstage Actions, Manual)**
 - ✅ Infraestructura AWS completamente automatizada
 - ✅ CI/CD con GitHub Actions
 - ✅ Documentación técnica integrada (TechDocs)
 - ✅ Seguridad OIDC implementada (100% compliance)
 - ✅ Testing automatizado (100% success rate)
 - ✅ Herramientas de mantenimiento operativas
-- ✅ **S3 buckets con permisos públicos configurados automáticamente** ✨ **NUEVO**
+- ✅ **Flujo completo Template → GitHub → IAC → Deploy documentado** ✨ **NUEVO**
 
 ---
 
 **Última actualización**: 2025-09-25  
-**Fase actual**: Completada - Sistema en producción  
-**Estado**: 100% funcional con máxima seguridad OIDC  
-**Backstage Portal**: Operativo en `/home/giovanemere/ia-ops/ia-ops-backstage/`
+**Fase actual**: Completada - Sistema en producción con arquitectura BillPay completa  
+**Estado**: 100% funcional con máxima seguridad OIDC + Templates enterprise  
+**Backstage Portal**: Operativo en `/home/giovanemere/ia-ops/ia-ops-backstage/`  
+**Template Actualizado**: BillPay Complete Stack Multi-Cloud con 14 componentes configurables
